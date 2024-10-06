@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario de Tienda</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 20px;
+    padding: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1, h2 {
+    color: #4CAF50;
+}
+
+input {
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 300px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.product-list {
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.product-list p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #555;
+}
+
+#inventario {
+    margin-top: 10px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.container {
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+    </style>
+</head>
+<body>
+
+    <h1>Inventario de Tienda</h1>
+
+    <!-- Formulario para agregar productos -->
+    <h2>Agregar Producto</h2>
+    <label for="nombreProducto">Nombre del Producto:</label>
+    <input type="text" id="nombreProducto" placeholder="Ej: Manzanas"><br>
+    <label for="cantidadProducto">Cantidad:</label>
+    <input type="number" id="cantidadProducto" placeholder="Ej: 10"><br>
+    <button onclick="agregarProducto()">Agregar Producto</button>
+
+    <!-- Botón para mostrar todos los productos -->
+    <h2>Mostrar Productos</h2>
+    <button onclick="mostrarProductos()">Ver Inventario</button>
+    <div id="inventario" class="product-list"></div>
+
+    <!-- Formulario para actualizar cantidad -->
+    <h2>Actualizar Cantidad</h2>
+    <label for="nombreActualizar">Nombre del Producto:</label>
+    <input type="text" id="nombreActualizar" placeholder="Ej: Manzanas"><br>
+    <label for="cantidadActualizar">Nueva Cantidad:</label>
+    <input type="number" id="cantidadActualizar" placeholder="Ej: 5"><br>
+    <button onclick="actualizarCantidad()">Actualizar Cantidad</button>
+
+    <!-- Botón para eliminar productos sin stock -->
+    <h2>Eliminar Productos sin Stock</h2>
+    <button onclick="eliminarSinStock()">Eliminar sin Stock</button>
+
+    <script>
+        // Arreglo para almacenar los productos
+        let inventario = [];
+
+        // Función para agregar un producto
+        function agregarProducto() {
+            const nombre = document.getElementById("nombreProducto").value;
+            const cantidad = parseInt(document.getElementById("cantidadProducto").value);
+
+            if (nombre === "" || isNaN(cantidad)) {
+                alert("Por favor ingrese un nombre y una cantidad válida.");
+                return;
+            }
+
+            let productoExistente = inventario.find(producto => producto.nombre === nombre);
+            
+            if (productoExistente) {
+                alert(`El producto ${nombre} ya existe en el inventario.`);
+            }  else {
+                inventario.push({ nombre: nombre, cantidad: cantidad });
+                alert(`Producto ${nombre} agregado con ${cantidad} unidades.`);
+                limpiarFormulario();
+            }
+        }
+
+        // Función para mostrar todos los productos
+        function mostrarProductos() {
+            const inventarioDiv = document.getElementById("inventario");
+            inventarioDiv.innerHTML = ""; // Limpiar antes de mostrar
+
+            if (inventario.length === 0) {
+                inventarioDiv.innerHTML = "El inventario está vacío.";
+            } else {
+                inventario.forEach(producto => {
+                    inventarioDiv.innerHTML += `<p>Producto: ${producto.nombre}, Cantidad: ${producto.cantidad}</p>`;
+                });
+            }
+        }
+
+        // Función para actualizar la cantidad de un producto
+        function actualizarCantidad() {
+            const nombre = document.getElementById("nombreActualizar").value;
+            const nuevaCantidad = parseInt(document.getElementById("cantidadActualizar").value);
+
+            if (nombre === "" || isNaN(nuevaCantidad)) {
+                alert("Por favor ingrese un nombre y una cantidad válida.");
+                return;
+            }
+
+            let producto = inventario.find(producto => producto.nombre === nombre);
+
+            if (producto) {
+             
+                producto.cantidad = nuevaCantidad;
+                alert(`Cantidad del producto ${nombre} actualizada a ${nuevaCantidad}.`);
+                limpiarFormulario();
+                
+            } else {
+                alert(`El producto ${nombre} no se encuentra en el inventario.`);
+            }
+        }
+
+        // Función para eliminar productos sin stock
+        function eliminarSinStock() {
+            inventario = inventario.filter(producto => producto.cantidad > 0);
+            alert("Productos sin stock eliminados.");
+            mostrarProductos();
+        }
+
+        // Función para limpiar los campos del formulario
+        function limpiarFormulario() {
+            document.getElementById("nombreProducto").value = "";
+            document.getElementById("cantidadProducto").value = "";
+            document.getElementById("nombreActualizar").value = "";
+            document.getElementById("cantidadActualizar").value = "";
+        }
+    </script>
+
+</body>
+</html>
